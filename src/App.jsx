@@ -3,6 +3,8 @@ import logo from './assets/logo.png'
 import hero from './assets/hero.jpg'
 import joinQr from './assets/qr/join-qr.jpg'
 import qqGroupQr from './assets/qr/qq-group-qr.png'
+import linuo from './assets/poster/linuo.png'
+import houhang from './assets/poster/houhang.png'
 
 // 自动收集 src/assets/activities/ 下的所有图片，放入文件夹即自动显示
 const activityPhotos = import.meta.glob('./assets/activities/*.{jpg,jpeg,png,webp,gif}', {
@@ -34,10 +36,15 @@ const activities = [
   { emoji: '🎨', title: '创意设计赛', desc: '海报 / 视频创作，赢华硕周边' },
 ]
 
+const posters = [
+  { src: linuo, name: '李诺', grade: '大二' },
+  { src: houhang, name: '侯航', grade: '大二' },
+]
+
 /* ---------- 组件 ---------- */
 
 function Nav() {
-  const links = ['关于我们', '加入福利', '招新流程', '活动回顾', '社团活动']
+  const links = ['关于我们', '加入福利', '招新流程', '活动回顾', '代言人海报', '社团活动']
   return (
     <header className="nav">
       <div className="nav-inner">
@@ -174,6 +181,70 @@ function Activities() {
   )
 }
 
+function Poster() {
+  const [lightbox, setLightbox] = useState(null) // 当前预览海报的索引
+
+  const close = () => setLightbox(null)
+  const prev = () => setLightbox((lightbox - 1 + posters.length) % posters.length)
+  const next = () => setLightbox((lightbox + 1) % posters.length)
+
+  useEffect(() => {
+    if (lightbox === null) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') close()
+      else if (e.key === 'ArrowLeft') prev()
+      else if (e.key === 'ArrowRight') next()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [lightbox, posters.length])
+
+  return (
+    <section className="section section-alt" id="代言人海报">
+      <div className="section-head">
+        <h2>代言人海报</h2>
+        <p>认识我们的校园代言人</p>
+      </div>
+      <div className="poster-grid">
+        {posters.map((p, i) => (
+          <figure className="poster-card" key={p.name}>
+            <div
+              className="poster-img-wrap"
+              onClick={() => setLightbox(i)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') setLightbox(i)
+              }}
+            >
+              <img className="poster-img" src={p.src} alt={`代言人 ${p.name} 海报`} loading="lazy" />
+            </div>
+            <figcaption className="poster-cap">
+              <span className="poster-name">{p.name}</span>
+              <span className="poster-grade">{p.grade}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+
+      {lightbox !== null && (
+        <div className="lightbox" onClick={close}>
+          <button className="lightbox-close" onClick={close} aria-label="关闭">✕</button>
+          <button className="lightbox-nav lightbox-prev" onClick={(e) => { e.stopPropagation(); prev() }} aria-label="上一张">‹</button>
+          <img
+            className="lightbox-img"
+            src={posters[lightbox].src}
+            alt={`代言人 ${posters[lightbox].name} 海报`}
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button className="lightbox-nav lightbox-next" onClick={(e) => { e.stopPropagation(); next() }} aria-label="下一张">›</button>
+          <span className="lightbox-count">{lightbox + 1} / {posters.length}</span>
+        </div>
+      )}
+    </section>
+  )
+}
+
 function ClubActivities() {
   const photos = Object.values(activityPhotos)
   const [lightbox, setLightbox] = useState(null) // 当前预览照片的索引
@@ -281,6 +352,7 @@ export default function App() {
       <Benefits />
       <Timeline />
       <Activities />
+      <Poster />
       <ClubActivities />
       <JoinQR />
       <Footer />
