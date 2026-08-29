@@ -3,8 +3,12 @@ import logo from './assets/logo.png'
 import hero from './assets/hero.jpg'
 import joinQr from './assets/qr/join-qr.jpg'
 import qqGroupQr from './assets/qr/qq-group-qr.png'
-import linuo from './assets/poster/linuo.png'
+import chendongyu from './assets/poster/chendongyu.png'
 import houhang from './assets/poster/houhang.png'
+import linuo from './assets/poster/linuo.png'
+import changcan from './assets/poster/changcan.png'
+import tanyuanpeng from './assets/poster/tanyuanpeng.png'
+import luoshuai from './assets/poster/luoshuai.png'
 
 // 自动收集 src/assets/activities/ 下的所有图片，放入文件夹即自动显示
 const activityPhotos = import.meta.glob('./assets/activities/*.{jpg,jpeg,png,webp,gif}', {
@@ -37,8 +41,12 @@ const activities = [
 ]
 
 const posters = [
-  { src: linuo, name: '李诺', grade: '大二' },
+  { src: chendongyu, name: '陈东宇', grade: '大三' },
   { src: houhang, name: '侯航', grade: '大二' },
+  { src: linuo, name: '李诺', grade: '大二' },
+  { src: changcan, name: '常灿', grade: '大二' },
+  { src: tanyuanpeng, name: '谭远鹏', grade: '大二' },
+  { src: luoshuai, name: '骆帅', grade: '大二' },
 ]
 
 /* ---------- 组件 ---------- */

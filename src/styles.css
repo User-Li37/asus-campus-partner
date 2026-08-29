@@ -517,11 +517,11 @@ a {
 
 /* ---------- 代言人海报 ---------- */
 .poster-grid {
-  max-width: 880px;
+  max-width: 1000px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 28px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
 }
 
 .poster-card {
@@ -873,6 +873,12 @@ a {
 }
 
 /* ---------- 响应式 ---------- */
+@media (max-width: 900px) {
+  .poster-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 640px) {
   .nav-links {
     display: none;
