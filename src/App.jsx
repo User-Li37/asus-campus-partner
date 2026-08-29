@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import logo from './assets/logo.png'
 import hero from './assets/hero.jpg'
+import campusMap from './assets/campus-map.jpg'
 import joinQr from './assets/qr/join-qr.jpg'
 import qqGroupQr from './assets/qr/qq-group-qr.png'
 import chendongyu from './assets/poster/chendongyu.png'
@@ -111,12 +112,13 @@ function Hero() {
 }
 
 function CampusView() {
-  const photos = Object.values(campusPhotos)
+  const photos = Object.values(campusPhotos) // 7 张校园俯拍图
+  const all = [campusMap, ...photos] // 地图放最前，整组可前后浏览
   const [lightbox, setLightbox] = useState(null) // 当前预览照片的索引
 
   const close = () => setLightbox(null)
-  const prev = () => setLightbox((lightbox - 1 + photos.length) % photos.length)
-  const next = () => setLightbox((lightbox + 1) % photos.length)
+  const prev = () => setLightbox((lightbox - 1 + all.length) % all.length)
+  const next = () => setLightbox((lightbox + 1) % all.length)
 
   useEffect(() => {
     if (lightbox === null) return
@@ -127,7 +129,7 @@ function CampusView() {
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [lightbox, photos.length])
+  }, [lightbox, all.length])
 
   return (
     <section className="section" id="青大一览">
@@ -136,6 +138,13 @@ function CampusView() {
         <p>俯瞰校园，一览青大风景</p>
       </div>
 
+      {/* 金家岭校区地图 */}
+      <div className="campus-map-wrap" onClick={() => setLightbox(0)}>
+        <img className="campus-map" src={campusMap} alt="金家岭校区地图" loading="lazy" />
+        <p className="campus-map-cap">📍 金家岭校区地图（点击放大）</p>
+      </div>
+
+      {/* 校园俯拍图 */}
       {photos.length === 0 ? (
         <div className="photos-empty">
           <span className="photos-empty-icon">🖼️</span>
@@ -147,8 +156,8 @@ function CampusView() {
       ) : (
         <div className="campus-grid">
           {photos.map((src, i) => (
-            <div className="campus-item" key={src} onClick={() => setLightbox(i)}>
-              <img src={src} alt={`青大一览照片 ${i + 1}`} loading="lazy" />
+            <div className="campus-item" key={src} onClick={() => setLightbox(i + 1)}>
+              <img src={src} alt={`校园俯拍图 ${i + 1}`} loading="lazy" />
             </div>
           ))}
         </div>
@@ -160,12 +169,12 @@ function CampusView() {
           <button className="lightbox-nav lightbox-prev" onClick={(e) => { e.stopPropagation(); prev() }} aria-label="上一张">‹</button>
           <img
             className="lightbox-img"
-            src={photos[lightbox]}
-            alt={`青大一览照片 ${lightbox + 1}`}
+            src={all[lightbox]}
+            alt={lightbox === 0 ? '金家岭校区地图' : '校园俯拍图'}
             onClick={(e) => e.stopPropagation()}
           />
           <button className="lightbox-nav lightbox-next" onClick={(e) => { e.stopPropagation(); next() }} aria-label="下一张">›</button>
-          <span className="lightbox-count">{lightbox + 1} / {photos.length}</span>
+          <span className="lightbox-count">{lightbox + 1} / {all.length}</span>
         </div>
       )}
     </section>
