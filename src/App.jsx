@@ -97,7 +97,7 @@ function Hero() {
         </p>
         <div className="hero-actions">
           <a href="#join" className="btn btn-primary">🚀 立即报名加入</a>
-          <a href="#about" className="btn btn-ghost">了解我们 ↓</a>
+          <a href="./about.html" className="btn btn-ghost">了解我们 →</a>
         </div>
         <div className="hero-stats">
           <div className="stat"><b>10+</b><span>场活动/学期</span></div>
@@ -429,6 +429,34 @@ function Footer() {
 }
 
 export default function App() {
+  useEffect(() => {
+    const els = Array.from(document.querySelectorAll('.section, .hero'))
+    if (!('IntersectionObserver' in window)) {
+      els.forEach((el) => el.classList.add('is-visible'))
+      return
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible')
+            io.unobserve(entry.target)
+          }
+        })
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+    )
+    els.forEach((el) => io.observe(el))
+    // 兜底：2 秒后强制全部显示，防止 IntersectionObserver 不触发导致空白
+    const timer = setTimeout(() => {
+      els.forEach((el) => el.classList.add('is-visible'))
+    }, 2000)
+    return () => {
+      io.disconnect()
+      clearTimeout(timer)
+    }
+  }, [])
+
   return (
     <>
       <Nav />
