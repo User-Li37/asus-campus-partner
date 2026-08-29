@@ -16,6 +16,12 @@ const activityPhotos = import.meta.glob('./assets/activities/*.{jpg,jpeg,png,web
   import: 'default',
 })
 
+// 自动收集 src/assets/campus/ 下的所有图片，放入文件夹即自动显示
+const campusPhotos = import.meta.glob('./assets/campus/*.{jpg,jpeg,png,webp,gif}', {
+  eager: true,
+  import: 'default',
+})
+
 /* ---------- 数据 ---------- */
 const benefits = [
   { icon: '🎁', title: '外设体验', desc: '华硕外设 第一时间上手评测。' },
@@ -52,7 +58,7 @@ const posters = [
 /* ---------- 组件 ---------- */
 
 function Nav() {
-  const links = ['关于我们', '加入福利', '招新流程', '活动回顾', '代言人海报', '社团活动']
+  const links = ['青大一览', '关于我们', '加入福利', '招新流程', '活动回顾', '代言人海报', '社团活动']
   return (
     <header className="nav">
       <div className="nav-inner">
@@ -100,6 +106,68 @@ function Hero() {
           <img className="hero-img" src={hero} alt="华硕校园合伙人" />
         </div>
       </div>
+    </section>
+  )
+}
+
+function CampusView() {
+  const photos = Object.values(campusPhotos)
+  const [lightbox, setLightbox] = useState(null) // 当前预览照片的索引
+
+  const close = () => setLightbox(null)
+  const prev = () => setLightbox((lightbox - 1 + photos.length) % photos.length)
+  const next = () => setLightbox((lightbox + 1) % photos.length)
+
+  useEffect(() => {
+    if (lightbox === null) return
+    const onKey = (e) => {
+      if (e.key === 'Escape') close()
+      else if (e.key === 'ArrowLeft') prev()
+      else if (e.key === 'ArrowRight') next()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [lightbox, photos.length])
+
+  return (
+    <section className="section" id="青大一览">
+      <div className="section-head">
+        <h2>青大一览</h2>
+        <p>俯瞰校园，一览青大风景</p>
+      </div>
+
+      {photos.length === 0 ? (
+        <div className="photos-empty">
+          <span className="photos-empty-icon">🖼️</span>
+          <p>图片待填充</p>
+          <p className="photos-empty-hint">
+            把图片放进 <code>src/assets/campus/</code> 文件夹即可自动显示
+          </p>
+        </div>
+      ) : (
+        <div className="campus-grid">
+          {photos.map((src, i) => (
+            <div className="campus-item" key={src} onClick={() => setLightbox(i)}>
+              <img src={src} alt={`青大一览照片 ${i + 1}`} loading="lazy" />
+            </div>
+          ))}
+        </div>
+      )}
+
+      {lightbox !== null && (
+        <div className="lightbox" onClick={close}>
+          <button className="lightbox-close" onClick={close} aria-label="关闭">✕</button>
+          <button className="lightbox-nav lightbox-prev" onClick={(e) => { e.stopPropagation(); prev() }} aria-label="上一张">‹</button>
+          <img
+            className="lightbox-img"
+            src={photos[lightbox]}
+            alt={`青大一览照片 ${lightbox + 1}`}
+            onClick={(e) => e.stopPropagation()}
+          />
+          <button className="lightbox-nav lightbox-next" onClick={(e) => { e.stopPropagation(); next() }} aria-label="下一张">›</button>
+          <span className="lightbox-count">{lightbox + 1} / {photos.length}</span>
+        </div>
+      )}
     </section>
   )
 }
@@ -356,6 +424,7 @@ export default function App() {
     <>
       <Nav />
       <Hero />
+      <CampusView />
       <About />
       <Benefits />
       <Timeline />

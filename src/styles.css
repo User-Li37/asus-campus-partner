@@ -630,6 +630,35 @@ a {
   font-size: 13px;
 }
 
+/* ---------- 青大一览 ---------- */
+.campus-grid {
+  max-width: 1120px;
+  margin: 0 auto;
+  columns: 3 240px;
+  column-gap: 16px;
+}
+
+.campus-item {
+  break-inside: avoid;
+  margin-bottom: 16px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  cursor: zoom-in;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campus-item:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-hover);
+}
+
+.campus-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 /* ---------- 灯箱 ---------- */
 .lightbox {
   position: fixed;
@@ -903,5 +932,10 @@ a {
   .poster-grid {
     grid-template-columns: 1fr;
     max-width: 340px;
+  }
+
+  .campus-grid {
+    columns: 2 140px;
+    column-gap: 12px;
   }
 }
