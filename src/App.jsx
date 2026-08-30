@@ -10,6 +10,7 @@ import linuo from './assets/poster/linuo.png'
 import changcan from './assets/poster/changcan.png'
 import tanyuanpeng from './assets/poster/tanyuanpeng.png'
 import luoshuai from './assets/poster/luoshuai.png'
+import luoyue from './assets/poster/luoyue.png'
 
 // 自动收集 src/assets/activities/ 下的所有图片，放入文件夹即自动显示
 const activityPhotos = import.meta.glob('./assets/activities/*.{jpg,jpeg,png,webp,gif}', {
@@ -54,6 +55,7 @@ const posters = [
   { src: changcan, name: '常灿', grade: '大二' },
   { src: tanyuanpeng, name: '谭远鹏', grade: '大二' },
   { src: luoshuai, name: '骆帅', grade: '大二' },
+  { src: luoyue, name: '罗跃', grade: '大二' },
 ]
 
 /* ---------- 组件 ---------- */
